@@ -25,44 +25,41 @@ public static class CardLogic
     {
         SetCounts(hand);
         
-        if(IsFlush()) 
+        if(IsFlush(suitCounts)) 
         {
+            if (IsRoyal(valueCounts))
+            {
+                return HandType.ROYAL_FLUSH;
+            }
             if (IsStraight(hand)) 
             {
-                if (IsRoyal()) 
-                {
-                    return HandType.ROYAL_FLUSH;
-                }
                 return HandType.STRAIGHT_FLUSH;
             }
             return HandType.FLUSH;
         }
-        if(suitCounts.Count == 2) 
+        if (IsFourKind(valueCounts))
         {
-            if (IsFourKind())
-            {
-                return HandType.FOUR_KIND;
-            }
+            return HandType.FOUR_KIND;
+        }
+        if (IsFullHouse(valueCounts))
+        {
             return HandType.FULL_HOUSE;
         }
         if (IsStraight(hand)) 
         {
             return HandType.STRAIGHT;
         }
-        if (IsThreeKind())
+        if (IsThreeKind(valueCounts))
         {
             return HandType.THREE_KIND;
         }
-        if (IsPair())
+        if (IsTwoPair(valueCounts))
         {
-            if (IsTwoPair())
-            {
-                return HandType.TWO_PAIR;
-            }
-            if (IsJacksBetter())
-            {
-                return HandType.JACKS_BETTER;
-            }
+            return HandType.TWO_PAIR;
+        }
+        if (IsJacksBetter(valueCounts))
+        {
+            return HandType.JACKS_BETTER;
         }
         return HandType.OTHER;
     }
@@ -116,7 +113,7 @@ public static class CardLogic
             }
         }
     }
-    private static bool IsFlush()
+    private static bool IsFlush(Dictionary<Card.Suit, int> suitCounts)
     {
         return suitCounts.Count == 1;
     }
@@ -137,7 +134,7 @@ public static class CardLogic
         }
         return true;
     }
-    private static bool IsRoyal()
+    private static bool IsRoyal(Dictionary<int, int> valueCounts)
     {
         return valueCounts.ContainsKey(1) &&
             valueCounts.ContainsKey(10) &&
@@ -145,19 +142,19 @@ public static class CardLogic
             valueCounts.ContainsKey(12) &&
             valueCounts.ContainsKey(13);
     }
-    private static bool IsFourKind()
+    private static bool IsFourKind(Dictionary<int, int> valueCounts)
     {
         return valueCounts.ContainsValue(4);
     }
-    private static bool IsThreeKind()
+    private static bool IsFullHouse(Dictionary<int, int> valueCounts)
+    {
+        return valueCounts.ContainsValue(3) && valueCounts.ContainsValue(2);
+    }
+    private static bool IsThreeKind(Dictionary<int, int> valueCounts)
     {
         return valueCounts.ContainsValue(3);
     }
-    private static bool IsPair()
-    {
-        return valueCounts.ContainsValue(2);
-    }
-    private static bool IsTwoPair()
+    private static bool IsTwoPair(Dictionary<int, int> valueCounts)
     {
         int pairCount = 0;
         foreach (int count in valueCounts.Values)
@@ -169,7 +166,7 @@ public static class CardLogic
         }
         return pairCount == 2;
     }
-    private static bool IsJacksBetter()
+    private static bool IsJacksBetter(Dictionary<int, int> valueCounts)
     {
         foreach(KeyValuePair<int, int> pair in valueCounts)
         {
