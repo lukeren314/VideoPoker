@@ -27,7 +27,7 @@ public class GameManager : MonoBehaviour
                 StartRound();
                 break;
             case GameState.BETTING:
-                if (uIManager.ValidBettingValue())
+                if (int.TryParse(uIManager.GetBettingText(), out _))
                 {
                     StartMulligan();
                 }
@@ -48,7 +48,7 @@ public class GameManager : MonoBehaviour
     }
     public void OnMulliganBegin()
     {
-        player.bet = uIManager.GetBettingAmount();
+        player.bet = int.Parse(uIManager.GetBettingText());
         player.credits -= player.bet;
         
         uIManager.SetCreditsBetText(player.bet);
@@ -75,8 +75,6 @@ public class GameManager : MonoBehaviour
 
         player.credits += totalReturn;
         uIManager.SetRoundLogText(totalReturn - player.bet);
-
-        //calculate return, log it to ui
     }
     private void Start()
     {
@@ -99,7 +97,6 @@ public class GameManager : MonoBehaviour
     private void EndRound()
     {
         gameEvents.OnRoundEnd.Invoke();
-
         gameState = GameState.FINISHED;
     }
 }

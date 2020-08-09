@@ -49,14 +49,9 @@ public class UIManager : MonoBehaviour
     {
         roundLogText.gameObject.SetActive(isActive);
     }
-    public bool ValidBettingValue()
+    public string GetBettingText()
     {
-        int amount;
-        return int.TryParse(bettingInputField.text, out amount);
-    }
-    public int GetBettingAmount()
-    {
-        return int.Parse(bettingInputField.text);
+        return bettingInputField.text;
     }
     public void SetRoundLogText(int profit)
     {

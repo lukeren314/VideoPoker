@@ -23,27 +23,7 @@ public static class CardLogic
     public static Dictionary<Card.Suit, int> suitCounts;
     public static HandType GetHandType(Card[] hand)
     {
-        valueCounts = new Dictionary<int, int>();
-        suitCounts = new Dictionary<Card.Suit, int>();
-        foreach(Card card in hand)
-        {
-            if (valueCounts.ContainsKey(card.value))
-            {
-                valueCounts[card.value]++;
-            }
-            else
-            {
-                valueCounts.Add(card.value, 1);
-            }
-            if (suitCounts.ContainsKey(card.suit))
-            {
-                suitCounts[card.suit]++;
-            }
-            else
-            {
-                suitCounts.Add(card.suit, 1);
-            }
-        }
+        SetCounts(hand);
         
         if(IsFlush()) 
         {
@@ -51,31 +31,31 @@ public static class CardLogic
             {
                 if (IsRoyal()) 
                 {
-                    return HandType.ROYAL_FLUSH; // royal flush
+                    return HandType.ROYAL_FLUSH;
                 }
-                return HandType.STRAIGHT_FLUSH; // straight flush
+                return HandType.STRAIGHT_FLUSH;
             }
-            return HandType.FLUSH; // flush
+            return HandType.FLUSH;
         }
         if(suitCounts.Count == 2) 
         {
             if (IsFourKind())
             {
-                return HandType.FOUR_KIND; // four of a kind
+                return HandType.FOUR_KIND;
             }
-            return HandType.FULL_HOUSE; // full house
+            return HandType.FULL_HOUSE;
         }
         if (IsStraight(hand)) 
         {
-            return HandType.STRAIGHT; //straight
+            return HandType.STRAIGHT;
         }
         if (IsThreeKind())
         {
-            return HandType.THREE_KIND; // 3 of a kind
+            return HandType.THREE_KIND;
         }
         if (IsPair())
         {
-            if (IsTwoPair()) //2 pair
+            if (IsTwoPair())
             {
                 return HandType.TWO_PAIR;
             }
@@ -112,11 +92,35 @@ public static class CardLogic
                 return 0;
         }
     }
-    public static bool IsFlush()
+    private static void SetCounts(Card[] hand)
+    {
+        valueCounts = new Dictionary<int, int>();
+        suitCounts = new Dictionary<Card.Suit, int>();
+        foreach (Card card in hand)
+        {
+            if (valueCounts.ContainsKey(card.value))
+            {
+                valueCounts[card.value]++;
+            }
+            else
+            {
+                valueCounts.Add(card.value, 1);
+            }
+            if (suitCounts.ContainsKey(card.suit))
+            {
+                suitCounts[card.suit]++;
+            }
+            else
+            {
+                suitCounts.Add(card.suit, 1);
+            }
+        }
+    }
+    private static bool IsFlush()
     {
         return suitCounts.Count == 1;
     }
-    public static bool IsStraight(Card[] hand)
+    private static bool IsStraight(Card[] hand)
     {
         int[] values = new int[hand.Length];
         for(int i = 0; i < hand.Length; i++)
@@ -133,7 +137,7 @@ public static class CardLogic
         }
         return true;
     }
-    public static bool IsRoyal()
+    private static bool IsRoyal()
     {
         return valueCounts.ContainsKey(1) &&
             valueCounts.ContainsKey(10) &&
@@ -141,19 +145,19 @@ public static class CardLogic
             valueCounts.ContainsKey(12) &&
             valueCounts.ContainsKey(13);
     }
-    public static bool IsFourKind()
+    private static bool IsFourKind()
     {
         return valueCounts.ContainsValue(4);
     }
-    public static bool IsThreeKind()
+    private static bool IsThreeKind()
     {
         return valueCounts.ContainsValue(3);
     }
-    public static bool IsPair()
+    private static bool IsPair()
     {
         return valueCounts.ContainsValue(2);
     }
-    public static bool IsTwoPair()
+    private static bool IsTwoPair()
     {
         int pairCount = 0;
         foreach (int count in valueCounts.Values)
@@ -165,7 +169,7 @@ public static class CardLogic
         }
         return pairCount == 2;
     }
-    public static bool IsJacksBetter()
+    private static bool IsJacksBetter()
     {
         foreach(KeyValuePair<int, int> pair in valueCounts)
         {

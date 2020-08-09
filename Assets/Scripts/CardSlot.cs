@@ -8,6 +8,7 @@ public class CardSlot : MonoBehaviour, IPointerClickHandler
 {
     public Card card;
     public Text holdText;
+
     private bool _hold;
     public bool hold { 
         get { return _hold; } 
@@ -24,11 +25,5 @@ public class CardSlot : MonoBehaviour, IPointerClickHandler
     public void OnPointerClick(PointerEventData eventData)
     {
         hold = !hold;
-        SetHoldText(hold);
     }
-    private void SetHoldText(bool hold)
-    {
-        
-    }
-    
 }
